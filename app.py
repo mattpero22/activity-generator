@@ -4,12 +4,13 @@ import os
 
 load_dotenv()
 
-from langchain_openai import ChatOpenAI
-from langchain_core.messages.human import HumanMessage
+from components.agent import create_openai_agent
 
 api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
+
+agent = create_openai_agent("gpt-4o-mini")
 
 @app.route('/')
 def index():
@@ -19,16 +20,15 @@ def index():
 # Test API endpoint for LangChain connecting to OpenAI
 @app.route('/test_openai', methods=['POST'])
 def test_openai():
-    llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
+    input_text = "How many bear species are there?"
+    
+    result = agent({"input": input_text})
 
-    message = "How many legs does a spider have?"
-
-    response = llm.invoke(message)
-    print(response.content)
+    print(result["output"])
 
     return {
         'statusCode': 200,
-        'body': response.content
+        'body': result
     }
 
 
