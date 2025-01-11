@@ -20,15 +20,15 @@ def index():
 # Test API endpoint for LangChain connecting to OpenAI
 @app.route('/test_openai', methods=['POST'])
 def test_openai():
-    input_text = "How many bear species are there?"
-    
-    result = agent({"input": input_text})
+    print(request.method)
 
-    print(result["output"])
+    input_text = request.json
+    
+    result = agent.invoke({"input": input_text})
 
     return {
         'statusCode': 200,
-        'body': result
+        'body': result["output"]
     }
 
 
